@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Lock Screen</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #000428, #004e92);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #lock-screen {
+            text-align: center;
+            width: 360px;
+            height: 640px;
+            background-color: #1a1a1a;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .time {
+            font-size: 2rem;
+        }
+
+        .date {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .password-container {
+            margin-top: 20px;
+        }
+
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            padding: 10px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .key {
+            background-color: #005f99;
+            color: white;
+            border: none;
+            padding: 8px;
+            font-size: 0.7rem;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 3px;
+            height: 30px;
+        }
+
+        .key.special {
+            font-size: 0.6rem;
+        }
+
+        .key:active {
+            background-color: #003f66;
+        }
+
+        #attempts {
+            margin-top: 10px;
+            color: red;
+        }
+
+        #message-screen {
+            display: none;
+            width: 360px;
+            height: 640px;
+            background-color: #f0f0f0;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .header .name {
+            flex-grow: 1;
+            margin-left: 10px;
+            text-align: left;
+        }
+
+        .header .buttons img {
+            width: 30px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .messages {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            height: calc(100% - 60px);
+            overflow-y: auto;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            word-wrap: break-word;
+        }
+
+        .message img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .message.self {
+            align-self: flex-end;
+            background-color: #2afc05;
+        }
+
+        .message.other {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div id="lock-screen">
+        <div class="time" id="time">12:30</div>
+        <div class="date">19 de Dezembro de 2024</div>
+        <div class="password-container">
+            <button id="unlock-btn">Desbloquear</button>
+            <div class="keyboard" id="keyboard" style="display: none;">
+                <input type="text" id="password" placeholder="Digite a senha" readonly style="grid-column: span 10; text-align: center;">
+                <button class="key" onclick="pressKey('1')">1</button>
+                <button class="key" onclick="pressKey('2')">2</button>
+                <button class="key" onclick="pressKey('3')">3</button>
+                <button class="key" onclick="pressKey('4')">4</button>
+                <button class="key" onclick="pressKey('5')">5</button>
+                <button class="key" onclick="pressKey('6')">6</button>
+                <button class="key" onclick="pressKey('7')">7</button>
+                <button class="key" onclick="pressKey('8')">8</button>
+                <button class="key" onclick="pressKey('9')">9</button>
+                <button class="key" onclick="pressKey('0')">0</button>
+                <button class="key" onclick="pressKey('Q')">Q</button>
+                <button class="key" onclick="pressKey('W')">W</button>
+                <button class="key" onclick="pressKey('E')">E</button>
+                <button class="key" onclick="pressKey('R')">R</button>
+                <button class="key" onclick="pressKey('T')">T</button>
+                <button class="key" onclick="pressKey('Y')">Y</button>
+                <button class="key" onclick="pressKey('U')">U</button>
+                <button class="key" onclick="pressKey('I')">I</button>
+                <button class="key" onclick="pressKey('O')">O</button>
+                <button class="key" onclick="pressKey('P')">P</button>
+                <button class="key" onclick="pressKey('A')">A</button>
+                <button class="key" onclick="pressKey('S')">S</button>
+                <button class="key" onclick="pressKey('D')">D</button>
+                <button class="key" onclick="pressKey('F')">F</button>
+                <button class="key" onclick="pressKey('G')">G</button>
+                <button class="key" onclick="pressKey('H')">H</button>
+                <button class="key" onclick="pressKey('J')">J</button>
+                <button class="key" onclick="pressKey('K')">K</button>
+                <button class="key" onclick="pressKey('L')">L</button>
+                <button class="key" onclick="pressKey('Z')">Z</button>
+                <button class="key" onclick="pressKey('X')">X</button>
+                <button class="key" onclick="pressKey('C')">C</button>
+                <button class="key" onclick="pressKey('V')">V</button>
+                <button class="key" onclick="pressKey('B')">B</button>
+                <button class="key" onclick="pressKey('N')">N</button>
+                <button class="key" onclick="pressKey('M')">M</button>
+                <button class="key special" onclick="toggleCase()">Shift</button>
+                <button class="key special" onclick="clearPassword()">Clear</button>
+                <button class="key special" onclick="submitPassword()">Enter</button>
+            </div>
+        </div>
+        <div id="attempts"></div>
+    </div>
+
+    <div id="message-screen">
+        <div class="header">
+            <img src="profile-placeholder.png" alt="Foto de Perfil">
+            <div class="name">Evandra (Eu)</div>
+            
+        </div>
+        <div class="messages">
+            <div class="message other">
+                <img src="placeholder.png" alt="Print da conversa">
+            </div>
+            <div class="message self">
+                "Que filho da p! Com a minha PRIMA??? Eu não
+                aguento mais. Aquele MERDA! A Fifi se foi e agora,
+                só o que faltava, parece que essa empresa desgraçada de metrô ainda vai fazer um corte de funcionários. Não tenho mais nada, nem tenho alguém
+                pra escrever essas merdas de mensagem e tenho
+                que desabafar pra mim mesma. Agora eu tô aqui,
+                patética, segurando esse maldito caco de vidro da
+                janela que eu quebrei. É isso. Que se foda esse mundo. Pelo menos eu vou dar trabalho pra alguém.
+                "
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let password = "";
+        let attempts = 3;
+        let isUpperCase = true;
+
+        document.getElementById("unlock-btn").addEventListener("click", () => {
+            document.getElementById("keyboard").style.display = "grid";
+        });
+
+        function pressKey(key) {
+            if (!isUpperCase) key = key.toLowerCase();
+            password += key;
+            document.getElementById("password").value = password;
+        }
+
+        function toggleCase() {
+            isUpperCase = !isUpperCase;
+            const keys = document.querySelectorAll(".key:not(.special)");
+            keys.forEach(key => {
+                key.textContent = isUpperCase ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
+            });
+        }
+
+        function clearPassword() {
+            password = "";
+            document.getElementById("password").value = "";
+        }
+
+        function submitPassword() {
+    const correctPasswords = ["Fifi2003", "FIFI2003"];
+    if (correctPasswords.includes(password)) {
+        document.getElementById("lock-screen").style.display = "none";
+        document.getElementById("message-screen").style.display = "block";
+    } else {
+        attempts--;
+        if (attempts > 0) {
+            document.getElementById("attempts").textContent = `Senha incorreta. Tentativas restantes: ${attempts}`;
+        } else {
+            document.getElementById("attempts").textContent = "Dispositivo bloqueado. Aguarde alguns minutos para tentar novamente.";
+            document.getElementById("keyboard").style.display = "none";
+            setTimeout(() => {
+                attempts = 3;
+                document.getElementById("attempts").textContent = "";
+                document.getElementById("keyboard").style.display = "grid";
+            }, 300000);
+        }
+        clearPassword();
+    }
+}
+    </script>
+
+</body>
+</html>   
